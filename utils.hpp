@@ -1,23 +1,21 @@
 #pragma once
 #include <type_traits>
 namespace ft{
-	template<typename> struct is_integral_base: std::false_type {};
-	template<> struct is_integral_base<bool>: std::true_type {};
-	template<> struct is_integral_base<char>: std::true_type {};
-	template<> struct is_integral_base<char16_t>: std::true_type {};
-	template<> struct is_integral_base<char32_t>: std::true_type {};
-	template<> struct is_integral_base<wchar_t>: std::true_type {};
-	template<> struct is_integral_base<signed char>: std::true_type {};
-	template<> struct is_integral_base<short int>: std::true_type {};
-	template<> struct is_integral_base<int>: std::true_type {};
-	template<> struct is_integral_base<long int>: std::true_type {};
-	template<> struct is_integral_base<long long int>: std::true_type {};
-	template<> struct is_integral_base<unsigned char>: std::true_type {};
-	template<> struct is_integral_base<unsigned short int>: std::true_type {};
-	template<> struct is_integral_base<unsigned int>: std::true_type {};
-	template<> struct is_integral_base<unsigned long int>: std::true_type {};
-	template<> struct is_integral_base<unsigned long long int>: std::true_type {};
-	template<typename T> struct is_integral: is_integral_base<std::remove_cv_t<T>> {};
+	template<typename> struct is_integral_base: public std::false_type {};
+	template<> struct is_integral_base<bool>: public std::true_type {};
+	template<> struct is_integral_base<char>: public std::true_type {};
+	template<> struct is_integral_base<char16_t>: public std::true_type {};
+	template<> struct is_integral_base<char32_t>: public std::true_type {};
+	template<> struct is_integral_base<wchar_t>: public std::true_type {};
+	template<> struct is_integral_base<signed char>: public std::true_type {};
+	template<> struct is_integral_base<short int>: public std::true_type {};
+	template<> struct is_integral_base<int>: public std::true_type {};
+	template<> struct is_integral_base<long int>: public std::true_type {};
+	template<> struct is_integral_base<unsigned char>: public std::true_type {};
+	template<> struct is_integral_base<unsigned short int>: public std::true_type {};
+	template<> struct is_integral_base<unsigned int>: public std::true_type {};
+	template<> struct is_integral_base<unsigned long int>: public std::true_type {};
+	template<typename T> struct is_integral: public is_integral_base<T> {};
 
 	template<bool B, class T = void>
 	struct enable_if {};

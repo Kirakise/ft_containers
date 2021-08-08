@@ -9,6 +9,35 @@
 #include <cstring>
 #include <exception>
 
+
+
+static class nullptr_t
+{
+    public:
+        /*
+        ** @brief For conversion to any type
+        ** of null non-member pointer.
+        */
+        template<class T>
+        operator T*() const { return (0); }
+
+        /*
+        ** @brief For conversion to any type of null
+        ** member pointer.
+        */
+        template<class C, class T>
+        operator T C::*() const { return (0); }
+
+    private:
+        
+        /*
+        ** @brief It's imposible to get an address of
+        ** a nullptr.
+        */
+        void operator&() const;
+
+} u_nullptr = {};
+
 namespace ft{
 	template <class T, class Allocator = std::allocator<T> >
 	class vector
@@ -92,10 +121,9 @@ namespace ft{
 					for (size_type i = 0; i < count; i++)	
 						this->alloc.construct(this->container + i, value);
 				}
-			template< class InputIt,
-				typename ft::enable_if<!ft::is_integral<InputIt>::value>::type*
-					= nullptr> //I really wish i knew how it works...
-			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator())
+			template < class InputIt >
+			vector( InputIt first, InputIt last, const Allocator& alloc = Allocator(), 
+			typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = u_nullptr )
 			: first(), last(), alloc(alloc)
 			{
 				size_type t = last - first;
@@ -140,10 +168,9 @@ namespace ft{
 				while(count--)
 					*(this->last++) = value;
 			}
-			template< class InputIt, 
-			typename ft::enable_if<!ft::is_integral<InputIt>::value>::type*
-				= nullptr>
-			void assign( InputIt first, InputIt last )
+			template< class InputIt>
+			void assign( InputIt first, InputIt last, 
+			typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = u_nullptr )
 			{
 				size_type i = last - first;
 				if (this->capacity() < i + 1)
@@ -246,10 +273,9 @@ namespace ft{
 					this->insert(pos, value);
 			}
 
-			template< class InputIt,
-				typename ft::enable_if<!ft::is_integral<InputIt>::value>::type*
-				= nullptr>
-			void insert( iterator pos, InputIt first, InputIt last)
+			template< class InputIt>
+			void insert( iterator pos, InputIt first, InputIt last,
+				typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = nullptr)
 			{
 				size_type tmp = pos - this->begin();
 				if (this->capacity() - this->size() < 
@@ -337,6 +363,7 @@ namespace ft{
 			}
 
 			struct OutOfRangeExp : public std::exception{
+				using std::exception::what;
 				const char * what() throw() { return "Vector out of range!"; }
 			};	
 		private:
@@ -407,4 +434,4 @@ namespace ft{
 	{
 		lhs.swap(rhs);
 	}
-};
+}

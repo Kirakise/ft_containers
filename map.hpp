@@ -107,12 +107,12 @@ namespace ft{
 		map() : ct(1000), cmp(ct[0]) {}
 
 		map( const Compare& comp,
-              const Allocator& alloc = Allocator() ) : ct(1000, value_type(Key(), T()), alloc), cmp(ct[0]) {}
+              const Allocator& alloc = Allocator() ) : ct(1000, value_type(Key(), T()), alloc), cmp(ct[0]), t(comp) {}
 
 		template< class InputIt >
 		map( InputIt first, InputIt last,
      		const Compare& comp = Compare(),
-     		const Allocator& alloc = Allocator() ) : t(comp), ct(1000, value_type(Key(), T()), alloc), cmp(ct[0]) {
+     		const Allocator& alloc = Allocator()) : t(comp), ct(1000, value_type(Key(), T()), alloc), cmp(ct[0]) {
 			while (first != last)
 			{
 				this->insert(*first);
@@ -133,13 +133,8 @@ namespace ft{
 		~map() {}
 
 		map &operator=(map const &other) {
-			this->ct.clear();
-			this->kt.clear();
-			this->ct.resize(this->ct.capacity());
-			this->cmp = this->ct[0];
-			iterator it = other.begin();
-			while (it != other.end())
-				this->insert(*it++);
+			map t(other);
+			this->swap(t);
 			return *this;
 		}
 
@@ -178,10 +173,9 @@ namespace ft{
 		size_type size() const { return this->kt.size(); }
 		size_type max_size() const { return this->ct.max_size(); }
 		void clear() { 
-			this->kt.clear(); 
-			this->ct.clear(); 
-			this->ct.resize(this->ct.capacity());
-			this->cmp = this->ct[0];
+			for (size_type i = 0; i < this->kt.size(); i++)
+				*(kt[i]) = this->cmp;
+			this->kt.clear();
 		}
 		ft::pair<iterator, bool> insert( const value_type& value )
 		{
@@ -377,7 +371,7 @@ namespace ft{
 			return false;
 		}
 		std::size_t getpos(const Key &key) const{
-			return Hash{}(key) % this->ct.size();
+			return t2(key) % this->ct.size();
 		}
 
 		void rehash()
@@ -397,6 +391,7 @@ namespace ft{
 		value_compare t;
 		ft::vector<value_type> ct;
 		ft::vector<value_type *> kt;
+		Hash t2;
 		value_type cmp;
 	};
 
@@ -463,4 +458,4 @@ namespace ft{
 	}
 
 
-};
+}

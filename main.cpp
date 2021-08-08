@@ -35,7 +35,6 @@ void printmap(ft::map<K, T> &tmp)
 
 void vector_test()
 {
-	size_t s = std::clock();
 	ft::vector <int> d;
 	ft::vector <int> d1(10, 2);
 	ft::vector <int> d2(d1);
@@ -173,11 +172,11 @@ void vector_test()
 	std::cout << "\t new vector 2" << std::endl;
 	prinvec(d);
 	std::cout << "Working time" << std::endl;
-	std::cout << (double)(std::clock() - s) / CLOCKS_PER_SEC << std::endl;
 }
 
 
 void map_test(){
+
 	std::cout << "--------------Map--------------" << std::endl;
 	std::cout << "--------------Constructors--------------" << std::endl;
 	ft::map<int, int> m1;
@@ -247,10 +246,10 @@ void map_test(){
 	std::cout << "\tOriginal map" << std::endl;
 	printmap(m2);
 	std::cout << "\tInsert {35,27}" << std::endl;
-	m2.insert({35,27});
+	m2.insert(ft::make_pair(35, 27));
 	printmap(m2);
 	std::cout << "\tInsert {35,23}" << std::endl;
-	m2.insert({35,23});
+	m2.insert(ft::make_pair(35, 23));
 	printmap(m2);
 	std::cout << "\tInserting by iterators from map" << std::endl;
 	printmap(m3);
@@ -314,7 +313,6 @@ void map_test(){
 	std::cout << (m2 < m3) << std::endl;
 	std::cout << "\tm1 <= m2" << std::endl;
 	std::cout << (m2 <= m3) << std::endl;
-	
 }
 
 void stack_test()
@@ -359,7 +357,19 @@ void stack_test()
 
 int main()
 {
+	std::cout << std::fixed;
+	size_t t, t1, t2;
+	size_t e, e1, e2;
+	t = std::clock();
 	vector_test();
-	//map_test();
-	//stack_test();
+	e = std::clock();
+	t1 = std::clock();
+	map_test();
+	e1 = std::clock();
+	t2 = std::clock();
+	stack_test();
+	e2 = std::clock();
+	std::cout << "Working time for vector" << std::endl << (e - (double)t) / CLOCKS_PER_SEC << std::endl;
+	std::cout << "Working time for map" << std::endl << (e1 - (double)t1) / CLOCKS_PER_SEC << std::endl;
+	std::cout << "Working time for stack" << std::endl << (e2 - (double)t2) / CLOCKS_PER_SEC << std::endl;
 }
