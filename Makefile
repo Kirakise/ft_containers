@@ -7,5 +7,5 @@ all:
 	rm file1
 	rm file2
 clean:
-	rm a.out
+	rm ftcont stdcont diff.txt
 re: clean all
