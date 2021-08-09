@@ -378,18 +378,21 @@ namespace ft{
 		}
 
 		void sort() {
-			if (kt.size() <= 1)
+			value_type *t;
+			size_type i = this->kt.size() - 1;
+			if (i + 1 <= 1)
 				return ;
-			for (size_type  i = 0; i < this->kt.size(); i++)
-				for (size_type j = i + 1; j < this->kt.size(); j++)
+			while (--i + 1 >= 1)
+			{
+				if (*(this->kt[i]) > *(this->kt[i + 1]))
 				{
-					if (*(kt[i]) > *(kt[j]))
-					{
-						value_type *t = kt[i];
-						kt[i] = kt[j];
-						kt[j] = t;
-					}
+					t = this->kt[i];
+					this->kt[i] = this->kt[i + 1];
+					this->kt[i + 1] = t;
 				}
+				else
+					break;
+			}
 		}
 
 		void rehash()
