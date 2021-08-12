@@ -23,7 +23,7 @@ namespace ft{
 	template <class T>
 	class map_iter : public ft::iterator<ft::bidirectional_iterator_tag, T>
 	{
-		private:
+		protected:
 		T **ptr;
 		public:
 		typedef typename ft::iterator <ft::bidirectional_iterator_tag,
@@ -40,24 +40,21 @@ namespace ft{
 		map_iter(map_iter const &other) : ptr(other.ptr) {}
 		map_iter (typename ft::vector<T *>::iterator it) : ptr(it.getptr()) {}
 		map_iter &operator=(map_iter const &other) { this->ptr = other.ptr; return *this; }
-		map_iter &operator++() { this->ptr++; return *this; }
-		map_iter operator++(int) {
+		virtual map_iter &operator++() { this->ptr++; return *this; }
+		virtual map_iter operator++(int) {
 			map_iter tmp(*this);
 			this->ptr++;
 			return tmp;
 		}
 		pointer getptr() {return *(this->ptr); }
-		map_iter &operator--() { this->ptr--;  return *this; }
-		map_iter operator--(int) { 
+		virtual map_iter &operator--() { this->ptr--;  return *this; }
+		virtual map_iter operator--(int) { 
 			map_iter tmp(*this);
 			this->ptr--;
 			return tmp;
 		}
 		pointer &operator->() {return *this; }
 		reference operator*() { return **(this->ptr); }
-		private:
-		map_iter operator+(size_type t) { return this->ptr + t; }
-		map_iter operator-(size_type t) { return this->ptr - t; }
 		public:
 		difference_type operator-(map_iter const &other) const
 		{ return this->ptr - other.ptr; }
@@ -67,6 +64,32 @@ namespace ft{
 		bool operator!=(map_iter const &other) const { return this->ptr != other.ptr; }
 		bool operator>= (map_iter const &other) const { return this->ptr >= other.ptr; }
 		bool operator<= (map_iter const &other) const { return this->ptr <= other.ptr; }
+	};
+	template <class T>
+	class rev_map_iter : public map_iter<T>
+	{
+		typedef typename ft::iterator <ft::bidirectional_iterator_tag,
+			T> It;
+		typedef typename It::size_type size_type;
+		typedef typename It::difference_type difference_type;
+		typedef typename It::pointer pointer;
+		typedef T& reference;
+		typedef typename It::value_type value_type;
+		typedef reference const_reference;
+
+		rev_map_iter &operator--() { this->ptr++; return *this; }
+		rev_map_iter operator--(int) {
+			rev_map_iter tmp(*this);
+			this->ptr++;
+			return tmp;
+		}
+		pointer getptr() {return *(this->ptr); }
+		rev_map_iter &operator++() { this->ptr--;  return *this; }
+		rev_map_iter operator++(int) { 
+			rev_map_iter tmp(*this);
+			this->ptr--;
+			return tmp;
+		}
 	};
 //unordered map in fact...
 	template <class Key, class T,
@@ -88,9 +111,9 @@ namespace ft{
 		typedef typename Allocator::const_pointer const_pointer;
 		typedef typename ft::map_iter<value_type> iterator;
 		typedef typename ft::map_iter<value_type> const_iterator;
-		typedef typename ft::map_iter<value_type>
+		typedef typename ft::rev_map_iter<value_type>
 			reverse_iterator;
-		typedef typename ft::map_iter<value_type>
+		typedef typename ft::rev_map_iter<value_type>
 			const_reverse_iterator;
 		
 		class value_compare

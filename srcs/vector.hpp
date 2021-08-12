@@ -35,25 +35,25 @@ namespace ft{
 				vec_iter(vec_iter const &other) : ptr(other.ptr) {}
 				~vec_iter(){}
 				vec_iter &operator=(vec_iter const &other){ this->ptr = other.ptr; return *this; }
-				vec_iter &operator++() { this->ptr++; return *this; }
-				vec_iter operator++(int) { 
+				virtual vec_iter &operator++() { this->ptr++; return *this; }
+				virtual vec_iter operator++(int) { 
 					vec_iter tmp(*this);
 					this->ptr++;
 					return tmp;
 				}
 				T1 *getptr() {return this->ptr; }
-				vec_iter &operator--() { this->ptr--; return *this; }
-				vec_iter operator--(int) {
+				virtual vec_iter &operator--() { this->ptr--; return *this; }
+				virtual vec_iter operator--(int) {
 					vec_iter tmp(*this);
 					this->ptr--;
 					return tmp;
 				}
 				pointer &operator->(){ return *this; }
-				virtual reference operator*(){ return *(this->ptr); }
+				reference operator*(){ return *(this->ptr); }
 				const_reference operator*() const { return *(this->ptr); }
-				vec_iter operator+(size_type t) { return this->ptr + t; }
-				vec_iter operator-(size_type t) { return this->ptr - t; }
-				difference_type  operator-(vec_iter const &other) const 
+				virtual vec_iter operator+(size_type t) { return this->ptr + t; }
+				virtual vec_iter operator-(size_type t) { return this->ptr - t; }
+				virtual difference_type  operator-(vec_iter const &other) const 
 				{ return this->ptr - other.ptr; }
 				reference operator[](size_type i) { return *(this->ptr[i]); }
 				const_reference operator[](size_type i) const { return *(this->ptr[i]);}
@@ -64,6 +64,40 @@ namespace ft{
 				bool operator<= (vec_iter const &other) const { return this->ptr <= other.ptr; }
 				bool operator>= (vec_iter const &other) const { return this->ptr >= other.ptr; }
 			};
+
+
+			template <class T1>
+			class rev_vec_iter : public vec_iter<T1>
+			{
+				typedef typename  ft::iterator <
+					ft::random_access_iterator_tag,
+					T1 > It;
+				typedef  typename It::size_type size_type;
+				typedef typename It::difference_type difference_type;
+				typedef typename It::pointer pointer;
+				typedef typename It::reference reference;
+				typedef typename It::value_type value_type;
+				typedef typename It::const_reference const_reference;
+				rev_vec_iter &operator--() { this->ptr++; return *this; }
+				rev_vec_iter operator--(int) { 
+					rev_vec_iter tmp(*this);
+					this->ptr++;
+					return tmp;
+				}
+				rev_vec_iter &operator++() { this->ptr--; return *this; }
+				rev_vec_iter operator++(int) {
+					rev_vec_iter tmp(*this);
+					this->ptr--;
+					return tmp;
+				}
+				rev_vec_iter operator+(size_type t) { return this->ptr - t; }
+				rev_vec_iter operator-(size_type t) { return this->ptr + t; }
+				difference_type  operator-(rev_vec_iter const &other) const 
+				{ return other.ptr - this->ptr; }
+
+			};
+
+
 			typedef T value_type;
 			typedef Allocator allocator_type;
 			typedef std::size_t size_type;
@@ -74,8 +108,8 @@ namespace ft{
 			typedef const value_type* const_pointer;
 			typedef vec_iter<T> iterator;
 			typedef vec_iter<T> const_iterator;
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef rev_vec_iter<T> reverse_iterator;
+			typedef rev_vec_iter<T> const_reverse_iterator;
 			
 			vector( const Allocator& alloc = allocator_type()) 
 				: first(), last(), cap(), alloc(alloc) {
@@ -308,7 +342,8 @@ namespace ft{
 				else if (count < this->size())
 					this->erase(this->begin() + count, this->end());
 				else
-					this->insert(this->end(), count - this->size(), value);
+					while (this->size() < count)
+						this->push_back(value);
 			}
 
 			void swap( vector& other )

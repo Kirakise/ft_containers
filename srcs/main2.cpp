@@ -173,6 +173,10 @@ void vector_test()
 	prinvec(d2);
 	std::cout << "\t new vector 2" << std::endl;
 	prinvec(d);
+	std::vector <int> d5;
+	d5.resize(10000);
+	for (int i = 0; i < 10000; i++)
+		d5.push_back(i);
 }
 
 
@@ -313,6 +317,8 @@ void map_test(){
 	std::cout << (m2 < m3) << std::endl;
 	std::cout << "\tm1 <= m2" << std::endl;
 	std::cout << (m2 <= m3) << std::endl;
+	for (int i = 0; i < 1000000; i++)
+		m2[i] = i;
 }
 
 void stack_test()
@@ -353,6 +359,8 @@ void stack_test()
 	d2.pop();
 	std::cout << "\tTop element after" << std::endl;
 	std::cout << d2.top() << std::endl;
+	for (int i = 0; i < 10000000; i++)
+		d2.push(i);
 }
 
 int main()
